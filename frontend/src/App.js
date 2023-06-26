@@ -1,76 +1,29 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import CredentialEnrollment from './components/CredentialEnrollment';
+import CredentialsList from './components/CredentialsList';
 
 function App() {
-  const [credential, setCredential] = useState('');
-  const [registrationNumber, setRegistrationNumber] = useState('');
-  const [userName, setUserName] = useState('');
-
-  const handleCredentialChange = (e) => {
-    setCredential(e.target.value);
-  };
-
-  const handleRegistrationNumberChange = (e) => {
-    setRegistrationNumber(e.target.value);
-  };
-
-  const handleUserNameChange = (e) => {
-    setUserName(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const data = {
-        credential: credential,
-        registrationNumber: registrationNumber,
-        userName: userName
-      };
-      await axios.post('http://localhost:5000/api/credentials', data);
-      setCredential('');
-      setRegistrationNumber('');
-      setUserName('');
-      alert('Credential enrolled successfully!');
-    } catch (error) {
-      console.error(error);
-      alert('Error enrolling credential!');
-    }
-  };
-
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4">Credential Enrollment</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Registration Number:</label>
-          <input
-            type="text"
-            className="form-control"
-            value={registrationNumber}
-            onChange={handleRegistrationNumberChange}
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">User Name:</label>
-          <input
-            type="text"
-            className="form-control"
-            value={userName}
-            onChange={handleUserNameChange}
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Credential:</label>
-          <input
-            type="text"
-            className="form-control"
-            value={credential}
-            onChange={handleCredentialChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Enroll Credential</button>
-      </form>
-    </div>
+    <Router>
+      <div className="container mt-5">
+        <h1 className="mb-4">Credential Management</h1>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">Enroll Credential</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/list" className="nav-link">Credentials List</Link>
+            </li>
+          </ul>
+        </nav>
+        <Routes>
+          <Route exact path="/" element={<CredentialEnrollment />} ></Route>
+          <Route path="/list" element={<CredentialsList />}></Route>
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
