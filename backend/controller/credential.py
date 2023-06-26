@@ -31,7 +31,7 @@ class credential_controller:
                 self.GPIO.wait_for_edge(14, self.GPIO.FALLING)
                 card_number = ""
                 for i in range(26):
-                    GPIO.wait_for_edge(15, self.GPIO.RISING)
+                    self.GPIO.wait_for_edge(15, self.GPIO.RISING)
                     card_number += str(self.GPIO.input(15))
                 self.model.insert_card_number(card_number)
                 self.view.display_message(f"Card number {card_number} stored in the database.")

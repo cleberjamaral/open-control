@@ -3,16 +3,33 @@ import axios from 'axios';
 
 function App() {
   const [credential, setCredential] = useState('');
+  const [registrationNumber, setRegistrationNumber] = useState('');
+  const [userName, setUserName] = useState('');
 
-  const handleInputChange = (e) => {
+  const handleCredentialChange = (e) => {
     setCredential(e.target.value);
+  };
+
+  const handleRegistrationNumberChange = (e) => {
+    setRegistrationNumber(e.target.value);
+  };
+
+  const handleUserNameChange = (e) => {
+    setUserName(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/credentials', { credential });
+      const data = {
+        credential: credential,
+        registrationNumber: registrationNumber,
+        userName: userName
+      };
+      await axios.post('http://localhost:5000/api/credentials', data);
       setCredential('');
+      setRegistrationNumber('');
+      setUserName('');
       alert('Credential enrolled successfully!');
     } catch (error) {
       console.error(error);
@@ -25,12 +42,30 @@ function App() {
       <h1 className="mb-4">Credential Enrollment</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
+          <label className="form-label">Registration Number:</label>
+          <input
+            type="text"
+            className="form-control"
+            value={registrationNumber}
+            onChange={handleRegistrationNumberChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">User Name:</label>
+          <input
+            type="text"
+            className="form-control"
+            value={userName}
+            onChange={handleUserNameChange}
+          />
+        </div>
+        <div className="mb-3">
           <label className="form-label">Credential:</label>
           <input
             type="text"
             className="form-control"
             value={credential}
-            onChange={handleInputChange}
+            onChange={handleCredentialChange}
           />
         </div>
         <button type="submit" className="btn btn-primary">Enroll Credential</button>

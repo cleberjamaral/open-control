@@ -14,14 +14,16 @@ CORS(app)  # Enable Cross-Origin Resource Sharing (CORS) for all routes
 @app.route('/api/credentials', methods=['POST'])
 def enroll_credential():
     credential = request.json['credential']
-    view.display_message(f"Enrolling credential: {credential}")
-    controller.insert_credential(credential,"","")
-    return jsonify(message="Card enrolled successfully")
+    registrationNumber = request.json['registrationNumber']
+    userName = request.json['userName']
+    view.display_message(f"Enrolling credential: {credential}, Reg.Number: {registrationNumber}, User: {userName}")
+    controller.insert_credential(credential,registrationNumber,userName)
+    return jsonify(message="Credential enrolled successfully")
 
 @app.route('/api/credentials', methods=['GET'])
 def get_credentials():
     credentials = controller.get_all_credentials()
-    view.display_message(f"Returning credential: {credentials}")
+    view.display_message(f"Returning credential: {credentials}, Reg.Number: {credentials}, User: {credentials}")
     return jsonify(credentials=credentials)
 
 @app.route('/', methods=['GET'])
