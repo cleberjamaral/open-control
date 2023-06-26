@@ -45,3 +45,9 @@ class credential_controller:
             self.GPIO.cleanup()
         self.model.close_connection()
         self.view.display_message(f"Cleanup process executed!")
+
+    def insert_credential(self, credential: str, registration_number: str, user_name: str):
+        self.model.insert_credential(credential, registration_number, user_name)
+
+    def get_all_credentials(self):
+        return self.model.get_all_credentials()
