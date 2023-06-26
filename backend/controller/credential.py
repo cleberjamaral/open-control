@@ -8,11 +8,11 @@ class credential_controller:
         self.is_raspberry_pi = platform.machine().startswith('arm') or platform.machine().startswith('aarch') # Check if running on Raspberry Pi
 
         if self.is_raspberry_pi:
-            self.view.display_message(f"Running on raspberry pi... "+platform.machine())
+            self.view.display_message(f"Running on raspberry pi... Current platform:"+platform.machine())
             import RPi.GPIO as GPIO
             self.GPIO = GPIO
         else:
-            self.view.display_message(f"Not running on raspberry pi "+platform.machine()+", it won't work with access controller peripherals!")
+            self.view.display_message(f"Peripherals won't work since it is not a Raspberry Pi! Current platform:"+platform.machine())
             self.GPIO = None      
 
     def setup_gpio(self):
@@ -35,7 +35,7 @@ class credential_controller:
                     card_number += str(self.GPIO.input(15))
                 self.model.insert_card_number(card_number)
                 self.view.display_message(f"Card number {card_number} stored in the database.")
-            self.view.display_message(f"Waiting for credentials loop finished!")
+            self.view.display_message(f"Credentials loop finished!")
 
         except KeyboardInterrupt:
             self.cleanup()

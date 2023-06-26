@@ -6,9 +6,9 @@ from view.credential import credential_view
 from controller.credential import credential_controller
 
 if __name__ == '__main__':
-    DATABASE_NAME = "open-control.db"
+    DATABASE_NAME = "../open-control.db"
     CREDENTIAL_TABLE = "credential"
-    LOG_FILE = "open-control.log"  # Specify the log file path here
+    LOG_FILE = "open-control-backend.log"  # Specify the log file path here
 
     model = credential_model(DATABASE_NAME, CREDENTIAL_TABLE)
     view = credential_view(LOG_FILE)
