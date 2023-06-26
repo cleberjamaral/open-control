@@ -4,23 +4,37 @@ import CredentialEnrollment from './components/CredentialEnrollment';
 import CredentialsList from './components/CredentialsList';
 
 function App() {
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
+
   return (
     <Router>
-      <div className="container mt-5">
-        <h1 className="mb-4">Credential Management</h1>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <button className="navbar-toggler" type="button" onClick={toggleMenu}>
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className={`collapse navbar-collapse${isMenuOpen ? ' show' : ''}`}>
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link to="/" className="nav-link">Enroll Credential</Link>
+          <li className="nav-item">
+              <Link to="/" className="nav-link" onClick={toggleMenu}>
+                Credentials List
+              </Link>
             </li>
             <li className="nav-item">
-              <Link to="/list" className="nav-link">Credentials List</Link>
+              <Link to="/enrollment" className="nav-link" onClick={toggleMenu}>
+                Enroll Credential
+              </Link>
             </li>
           </ul>
-        </nav>
-        <Routes>
-          <Route exact path="/" element={<CredentialEnrollment />} ></Route>
-          <Route path="/list" element={<CredentialsList />}></Route>
+        </div>
+      </nav>
+      <div className="container mt-4">
+      <Routes>
+      <Route path="/" element={<CredentialsList />}></Route>
+          <Route exact path="/enrollment" element={<CredentialEnrollment />} ></Route>
         </Routes>
       </div>
     </Router>
