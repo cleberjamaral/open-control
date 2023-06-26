@@ -1,18 +1,21 @@
 #pip install RPi.GPIO
 #sudo apt-get install sqlite3
 
-from model.model import CardModel
-from view.view import CardView
-from controller.controller import CardController
+from model.credential import credential_model
+from view.credential import credential_view
+from controller.credential import credential_controller
 
 if __name__ == '__main__':
-    DATABASE_NAME = "cards.db"
-    TABLE_NAME = "cards"
+    DATABASE_NAME = "open-control.db"
+    CREDENTIAL_TABLE = "credential"
+    LOG_FILE = "open-control.log"  # Specify the log file path here
 
-    model = CardModel(DATABASE_NAME, TABLE_NAME)
-    view = CardView()
-    controller = CardController(model, view)
+    model = credential_model(DATABASE_NAME, CREDENTIAL_TABLE)
+    view = credential_view(LOG_FILE)
+    controller = credential_controller(model, view)
+
+    view.display_message(f"Starting open-control project... database file:{DATABASE_NAME}")
 
     model.connect()
     controller.setup_gpio()
-    controller.read_card_numbers()
+    controller.read_credential()

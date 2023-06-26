@@ -1,6 +1,6 @@
 import sqlite3
 
-class CardModel:
+class credential_model:
     def __init__(self, database_name, table_name):
         self.database_name = database_name
         self.table_name = table_name
@@ -13,7 +13,7 @@ class CardModel:
         self.create_table()
 
     def create_table(self):
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} (card_number TEXT)")
+        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} (card_number TEXT, registration_number TEXT, user_name TEXT)")
 
     def insert_card_number(self, card_number):
         self.cursor.execute(f"INSERT INTO {self.table_name} (card_number) VALUES (?)", (card_number,))
