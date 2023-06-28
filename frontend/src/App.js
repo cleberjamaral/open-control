@@ -34,7 +34,7 @@ function App() {
       <div className="container mt-4">
       <Routes>
       <Route path="/" element={<CredentialsList />}></Route>
-          <Route exact path="/enrollment" element={<CredentialEnrollment />} ></Route>
+          <Route path="/enrollment" element={<CredentialEnrollment />} ></Route>
         </Routes>
       </div>
     </Router>
