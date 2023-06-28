@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function CredentialsList() {
   const [credentials, setCredentials] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCredentials();
@@ -17,9 +19,15 @@ function CredentialsList() {
     }
   };
 
+  const handleEdit = (credential) => {
+    // Implement your edit logic here
+    console.log(`Edit clicked for credential: ${credential.credential}`);
+    navigate('/enrollment', { state: { credential } });
+  };
+
   const handleDelete = async (credential) => {
     try {
-      await axios.delete(`http://191.36.9.231:5000/api/credentials/${credential.id}`);
+      await axios.delete(`http://191.36.9.231:5000/api/credentials/${credential}`);
       fetchCredentials();
     } catch (error) {
       console.error(error);
@@ -40,7 +48,7 @@ function CredentialsList() {
               <th scope="col">Registration Number</th>
               <th scope="col">User Name</th>
               <th scope="col">Credential</th>
-              <th scope="col">Actions</th>
+              <th scope="col" className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -49,8 +57,11 @@ function CredentialsList() {
                 <td>{credential.registration_number}</td>
                 <td>{credential.user_name}</td>
                 <td>{credential.credential}</td>
-                <td>
-                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(credential)}>
+                <td className="d-flex justify-content-center align-items-center">
+                  <button className="btn btn-primary btn-sm me-2" onClick={() => handleEdit(credential)}>
+                    Edit
+                  </button>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(credential.credential)}>
                     Delete
                   </button>
                 </td>

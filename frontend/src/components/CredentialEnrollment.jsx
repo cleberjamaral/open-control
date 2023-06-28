@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function App() {
+function CredentialEnrollment(props) {
   const [credential, setCredential] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
   const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    if (props.location.state && props.location.state.credential) {
+      const { credential, registration_number, user_name } = props.location.state.credential;
+      setCredential(credential);
+      setRegistrationNumber(registration_number);
+      setUserName(user_name);
+    }
+  }, [props.location.state]);
 
   const handleCredentialChange = (e) => {
     setCredential(e.target.value);
@@ -17,7 +26,7 @@ function App() {
   const handleUserNameChange = (e) => {
     setUserName(e.target.value);
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -74,4 +83,4 @@ function App() {
   );
 }
 
-export default App;
+export default CredentialEnrollment;
