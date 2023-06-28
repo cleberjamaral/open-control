@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+
 function CredentialEnrollment(props) {
   const [credential, setCredential] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
   const [userName, setUserName] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (location.state && location.state.credential) {
@@ -19,15 +21,6 @@ function CredentialEnrollment(props) {
   }, [location.state]);
 
   const isEditMode = !!location.state && !!location.state.credential;
-
-  useEffect(() => {
-    if (props.location.state && props.location.state.credential) {
-      const { credential, registration_number, user_name } = props.location.state.credential;
-      setCredential(credential);
-      setRegistrationNumber(registration_number);
-      setUserName(user_name);
-    }
-  }, [props.location.state]);
 
   const handleCredentialChange = (e) => {
     setCredential(e.target.value);
@@ -51,12 +44,14 @@ function CredentialEnrollment(props) {
       };
       if (isEditMode) {
         // Update existing credential
-        await axios.put(`http://191.36.9.231:5000/api/credentials/${location.state.credential.id}`, data);
+        await axios.put(`http://191.36.9.231:5000/api/credentials/${location.state.credential.credential}`, data);
+
       } else {
         // Add new credential
         await axios.post('http://191.36.9.231:5000/api/credentials', data);
       }
       navigate('/');
+
       setCredential('');
       setRegistrationNumber('');
       setUserName('');
