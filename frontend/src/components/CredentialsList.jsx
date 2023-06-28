@@ -26,11 +26,16 @@ function CredentialsList() {
   };
 
   const handleDelete = async (credential) => {
-    try {
-      await axios.delete(`http://191.36.9.231:5000/api/credentials/${credential}`);
-      fetchCredentials();
-    } catch (error) {
-      console.error(error);
+    const confirmDelete = window.confirm('Are you sure you want to delete this credential?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://191.36.9.231:5000/api/credentials/${credential}`);
+        fetchCredentials();
+        alert('Credential deleted successfully!');
+      } catch (error) {
+        console.error(error);
+        alert('Error deleting credential!');
+      }
     }
   };
 
