@@ -26,8 +26,8 @@ class credential_controller:
     def callback(self, bits, value):
         if bits == 34:
             w34 = (value >> 1) & 0xFFFFFFFF
-            self.model.insert_credential(hex(w34)[2:],"","")
-            self.view.display_message(f"Card number {hex(w34)[2:]} stored in the database.")
+            r = self.model.check_credential_exists(hex(w34)[2:])
+            self.view.display_message(f"Result? {r}")
 
     def setup_gpio(self):
         if self.is_raspberry_pi:
@@ -46,3 +46,6 @@ class credential_controller:
 
     def insert_credential(self, credential: str, registration_number: str, user_name: str):
         self.model.insert_credential(credential, registration_number, user_name)
+
+    def check_credential_exists(self,credential):
+        return self.model.check_credential_exists(credential)

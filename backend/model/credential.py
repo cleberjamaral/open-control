@@ -31,3 +31,9 @@ class credential_model:
         cursor.execute(f"SELECT credential, registration_number, user_name FROM {self.credential_table}")
         credentials = cursor.fetchall()
         return [{'registration_number':credential[1],'user_name':credential[2],'credential':credential[0]} for credential in credentials]
+    
+    def check_credential_exists(self,credential):
+        cursor = self.connection.cursor()
+        cursor.execute(f"SELECT credential, registration_number, user_name FROM {self.credential_table} WHERE credential = '"+credential+"'")
+        credentials = cursor.fetchall()
+        return credentials

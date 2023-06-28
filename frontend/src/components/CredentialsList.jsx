@@ -10,7 +10,7 @@ function CredentialsList() {
 
   const fetchCredentials = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/credentials');
+      const response = await axios.get('http://191.36.9.231:5000/api/credentials');
       setCredentials(response.data.credentials);
     } catch (error) {
       console.error(error);
