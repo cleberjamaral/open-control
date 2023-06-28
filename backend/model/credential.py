@@ -37,3 +37,13 @@ class credential_model:
         cursor.execute(f"SELECT credential, registration_number, user_name FROM {self.credential_table} WHERE credential = '"+credential+"'")
         credentials = cursor.fetchall()
         return credentials
+
+    def delete_credential(self,credential):
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(f"DELETE FROM {self.credential_table} WHERE credential = '"+credential+"'")
+            self.connection.commit()
+            return True
+        except Exception as e:
+            return False
+

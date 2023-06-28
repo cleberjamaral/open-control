@@ -49,3 +49,6 @@ class credential_controller:
 
     def check_credential_exists(self,credential):
         return self.model.check_credential_exists(credential)
+
+    def delete_credential(self,credential):
+        return self.model.delete_credential(credential)

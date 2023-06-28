@@ -35,6 +35,16 @@ def enroll_credential():
     controller.insert_credential(credential,registrationNumber,userName)
     return jsonify(message="Credential enrolled successfully")
 
+@app.route('/api/credentials/<string:credential>', methods=['DELETE'])
+def delete_credential(credential):
+    view.display_message(f"Deleting credential: {credential}")
+    
+    if controller.delete_credential(credential):
+        return jsonify({"message":"Credential deleted successfully"})
+    else:
+        return jsonify({"error":"Error on deleting credential="+credential}), 500
+
+
 if __name__ == '__main__':
     DATABASE_NAME = "../open-control.db"
     CREDENTIAL_TABLE = "credential"

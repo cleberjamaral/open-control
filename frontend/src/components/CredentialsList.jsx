@@ -17,6 +17,15 @@ function CredentialsList() {
     }
   };
 
+  const handleDelete = async (credential) => {
+    try {
+      await axios.delete(`http://191.36.9.231:5000/api/credentials/${credential}`);
+      fetchCredentials();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="container">
       <h2 className="mt-4 mb-4">Credentials List</h2>
@@ -31,6 +40,7 @@ function CredentialsList() {
               <th scope="col">Registration Number</th>
               <th scope="col">User Name</th>
               <th scope="col">Credential</th>
+              <th scope="col" className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -39,6 +49,11 @@ function CredentialsList() {
                 <td>{credential.registration_number}</td>
                 <td>{credential.user_name}</td>
                 <td>{credential.credential}</td>
+                <td className="d-flex justify-content-center align-items-center">
+                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(credential.credential)}>
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
