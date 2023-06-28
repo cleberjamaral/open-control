@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-
 function CredentialEnrollment(props) {
   const [credential, setCredential] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -20,6 +19,15 @@ function CredentialEnrollment(props) {
   }, [location.state]);
 
   const isEditMode = !!location.state && !!location.state.credential;
+
+  useEffect(() => {
+    if (props.location.state && props.location.state.credential) {
+      const { credential, registration_number, user_name } = props.location.state.credential;
+      setCredential(credential);
+      setRegistrationNumber(registration_number);
+      setUserName(user_name);
+    }
+  }, [props.location.state]);
 
   const handleCredentialChange = (e) => {
     setCredential(e.target.value);
