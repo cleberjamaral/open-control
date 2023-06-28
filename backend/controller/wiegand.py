@@ -14,9 +14,7 @@ class decoder:
    #!/usr/bin/env python
 
    import time
-
    import pigpio
-
    import wiegand
 
    def callback(bits, code):
@@ -84,14 +82,13 @@ class decoder:
 
          if gpio == self.gpio_0:
             self.code_timeout = self.code_timeout & 2 # clear gpio 0 timeout
+
          else:
             self.code_timeout = self.code_timeout & 1 # clear gpio 1 timeout
             self.num = self.num | 1
 
       else:
-
          if self.in_code:
-
             if gpio == self.gpio_0:
                self.code_timeout = self.code_timeout | 1 # timeout gpio 0
             else:
@@ -115,20 +112,24 @@ class decoder:
 if __name__ == "__main__":
 
    import time
-
    import pigpio
+   import backend.controller.wiegand as wiegand
 
-   import wiegand
-
+   print("Reading pins...")
    def callback(bits, value):
-      print("bits={} value={}".format(bits, value))
+      w34 = (value >> 1) & 0xFFFFFFFF
+      print("bits={} value={} hex={} w34={}".format(bits, value, hex(value), hex(w34)))
 
    pi = pigpio.pi()
 
-   w = wiegand.decoder(pi, 14, 15, callback)
+   print("Defining callback function...")
+   w = wiegand.decoder(pi, 17, 27, callback)
 
+   print("Waiting...")
    time.sleep(300)
 
+   print("Canceling...")
    w.cancel()
 
+   print("Stopping...")
    pi.stop()

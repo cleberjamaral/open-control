@@ -5,49 +5,44 @@ class credential_controller:
     def __init__(self, model, view):
         self.model = model
         self.view = view
+        self.r1d0 = 17 # Wiegand D0 of reader 1
+        self.r1d1 = 27 # Wiegand D1 of reader 1
         self.is_raspberry_pi = platform.machine().startswith('arm') or platform.machine().startswith('aarch') # Check if running on Raspberry Pi
 
         if self.is_raspberry_pi:
-            self.view.display_message(f"Running on raspberry pi... Current platform:"+platform.machine())
-            import RPi.GPIO as GPIO
-            self.GPIO = GPIO
+            self.view.display_message(f"Running on raspberry pi... Current platform: "+platform.machine())
+            #import RPi.GPIO as GPIO
+            #self.GPIO = GPIO
+            
+            import controller.wiegand as wiegand             
+            import pigpio
+            self.wiegand = wiegand
+            self.pi = pigpio.pi()
         else:
-            self.view.display_message(f"Peripherals won't work since it is not a Raspberry Pi! Current platform:"+platform.machine())
-            self.GPIO = None      
+            self.wiegand = None
+            self.pi = None
+            self.view.display_message(f"Peripherals won't work since it is not a Raspberry Pi! Current platform: "+platform.machine())
+            
+    def callback(self, bits, value):
+        if bits == 34:
+            w34 = (value >> 1) & 0xFFFFFFFF
+            self.model.insert_credential(hex(w34)[2:],"","")
+            self.view.display_message(f"Card number {hex(w34)[2:]} stored in the database.")
 
     def setup_gpio(self):
         if self.is_raspberry_pi:
-            self.GPIO.setmode(self.GPIO.BCM)
-            self.GPIO.setup(14, self.GPIO.IN)
-            self.GPIO.setup(15, self.GPIO.IN)
-            self.view.display_message(f"GPIO configured successfully!")
+            w = self.wiegand.decoder(self.pi, self.r1d0, self.r1d1, self.callback)
+            self.view.display_message(f"GPIO configured on pins: "+str(self.r1d0)+" and "+str(self.r1d1))
+            self.view.display_message(f"Waiting for credentials...")
         else:
             self.view.display_message(f"GPIO configuration skipped!")
 
-    def read_credential(self):
-        try:
-            self.view.display_message(f"Waiting for credentials...")
-            while True and self.is_raspberry_pi:
-                self.GPIO.wait_for_edge(14, self.GPIO.FALLING)
-                card_number = ""
-                for i in range(26):
-                    self.GPIO.wait_for_edge(15, self.GPIO.RISING)
-                    card_number += str(self.GPIO.input(15))
-                self.model.insert_card_number(card_number)
-                self.view.display_message(f"Card number {card_number} stored in the database.")
-            self.view.display_message(f"Credentials loop finished!")
-
-        except KeyboardInterrupt:
-            self.cleanup()
-
     def cleanup(self):
-        if self.is_raspberry_pi:
-            self.GPIO.cleanup()
         self.model.close_connection()
         self.view.display_message(f"Cleanup process executed!")
 
-    def insert_credential(self, credential: str, registration_number: str, user_name: str):
-        self.model.insert_credential(credential, registration_number, user_name)
-
     def get_all_credentials(self):
         return self.model.get_all_credentials()
+
+    def insert_credential(self, credential: str, registration_number: str, user_name: str):
+        self.model.insert_credential(credential, registration_number, user_name)
