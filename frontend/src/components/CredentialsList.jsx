@@ -51,8 +51,8 @@ function CredentialsList() {
           <thead className="table-dark" >
             <tr>
               <th scope="col">Registration Number</th>
-              <th scope="col">User Name</th>
-              <th scope="col">Credential</th>
+              <th scope="col" className="col-lg-4">User Name</th>
+              <th scope="col" className="text-center">Credential</th>
               <th scope="col" className="text-center">Actions</th>
             </tr>
           </thead>
@@ -60,8 +60,8 @@ function CredentialsList() {
             {credentials.map((credential, index) => (
               <tr key={index}>
                 <td>{credential.registration_number}</td>
-                <td>{credential.user_name}</td>
-                <td>{credential.credential}</td>
+                <td className="col-lg-4">{credential.user_name}</td>
+                <td className="text-center">{credential.credential}</td>
                 <td className="d-flex justify-content-center align-items-center">
                   <button className="btn btn-primary btn-sm me-2" onClick={() => handleEdit(credential)}>
                     Edit

@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function CredentialEnrollment(props) {
-  const [credential, setCredential] = useState('');
-  const [registrationNumber, setRegistrationNumber] = useState('');
-  const [userName, setUserName] = useState('');
+  const [credential, setCredential] = useState("");
+  const [registrationNumber, setRegistrationNumber] = useState("");
+  const [userName, setUserName] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
-
   useEffect(() => {
     if (location.state && location.state.credential) {
-      const { credential, registration_number, user_name } = location.state.credential;
+      const { credential, registration_number, user_name } =
+        location.state.credential;
       setCredential(credential);
       setRegistrationNumber(registration_number);
       setUserName(user_name);
@@ -33,32 +32,38 @@ function CredentialEnrollment(props) {
   const handleUserNameChange = (e) => {
     setUserName(e.target.value);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = {
         credential: credential,
         registrationNumber: registrationNumber,
-        userName: userName
+        userName: userName,
       };
       if (isEditMode) {
         // Update existing credential
-        await axios.put(`http://191.36.9.231:5000/api/credentials/${location.state.credential.credential}`, data);
-
+        await axios.put(
+          `http://191.36.9.231:5000/api/credentials/${location.state.credential.credential}`,
+          data
+        );
       } else {
         // Add new credential
-        await axios.post('http://191.36.9.231:5000/api/credentials', data);
+        await axios.post("http://191.36.9.231:5000/api/credentials", data);
       }
-      navigate('/');
+      navigate("/");
 
-      setCredential('');
-      setRegistrationNumber('');
-      setUserName('');
-      alert('Credential enrolled successfully!');
+      setCredential("");
+      setRegistrationNumber("");
+      setUserName("");
+      if (isEditMode) {
+        alert("Credential updated successfully!");
+      } else {
+        alert("Credential enrolled successfully!");
+      }
     } catch (error) {
       console.error(error);
-      alert('Error enrolling credential!');
+      alert("Error enrolling credential!");
     }
   };
 
@@ -91,9 +96,12 @@ function CredentialEnrollment(props) {
             className="form-control"
             value={credential}
             onChange={handleCredentialChange}
+            readOnly={isEditMode} // Set readOnly attribute based on edit mode
           />
         </div>
-        <button type="submit" className="btn btn-primary">{isEditMode ? 'Update' : 'Add'} Credential</button>
+        <button type="submit" className="btn btn-primary">
+          {isEditMode ? "Update" : "Add"} Credential
+        </button>
       </form>
     </div>
   );

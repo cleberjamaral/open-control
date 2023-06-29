@@ -28,7 +28,7 @@ class credential_model:
 
     def update_credential(self, credential: str, registration_number: str, user_name: str):
         cursor = self.connection.cursor()
-        cursor.execute(f"UPDATE {self.credential_table} (credential, registration_number, user_name) VALUES (?,?,?)", (credential,registration_number,user_name))
+        cursor.execute(f"UPDATE {self.credential_table} SET registration_number=?, user_name=? WHERE credential=?", (registration_number, user_name, credential))
         self.connection.commit()
 
     def get_all_credentials(self):

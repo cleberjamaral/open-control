@@ -38,14 +38,23 @@ def enroll_credential():
     controller.insert_credential(credential,registrationNumber,userName)
     return jsonify({"message":"Credential enrolled successfully"})
 
-@app.route('/api/credentials/<string:credential>', methods=['PUT'])
-def update_credential():
+@app.route('/api/credentials/<string:credential>', methods=['PUT', 'OPTIONS'])
+@cross_origin()
+def update_credential(credential):
+    if request.method == 'OPTIONS':
+        # Handle the preflight OPTIONS request
+        response = jsonify({'message': 'Preflight request received'})
+        response.headers.add('Access-Control-Allow-Methods', 'PUT')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        return response
+
+    # Handle the PUT request to update the credential
     credential = request.json['credential']
     registrationNumber = request.json['registrationNumber']
     userName = request.json['userName']
     view.display_message(f"Updating credential: {credential}, Reg.Number: {registrationNumber}, User: {userName}")
-    controller.update_credential(credential,registrationNumber,userName)
-    return jsonify({"message":"Credential updated successfully"})
+    controller.update_credential(credential, registrationNumber, userName)
+    return jsonify({"message": "Credential updated successfully"})
 
 @app.route('/api/credentials/<string:credential>', methods=['DELETE'])
 def delete_credential(credential):
