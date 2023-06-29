@@ -26,8 +26,10 @@ class credential_controller:
     def callback(self, bits, value):
         if bits == 34:
             w34 = (value >> 1) & 0xFFFFFFFF
-            r = self.model.check_credential_exists(hex(w34)[2:])
-            self.view.display_message(f"Result? {r}")
+            if self.model.check_credential_exists(hex(w34)[2:]):
+                self.view.display_message(f"Access granted for credential {hex(w34)[2:]}!")
+            else:
+                self.view.display_message(f"Credential {hex(w34)[2:]} not found, access denied!")
 
     def setup_gpio(self):
         if self.is_raspberry_pi:

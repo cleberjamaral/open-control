@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
 #pip install RPi.GPIO
 #pip install flask flask-cors
 #sudo apt-get install sqlite3
 #sudo systemctl enable pigpiod
 #sudo systemctl start pigpiod
+#Edit open-control script to /etc/init.d/ make sure the path is correct
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
@@ -33,7 +36,7 @@ def enroll_credential():
     userName = request.json['userName']
     view.display_message(f"Enrolling credential: {credential}, Reg.Number: {registrationNumber}, User: {userName}")
     controller.insert_credential(credential,registrationNumber,userName)
-    return jsonify(message="Credential enrolled successfully")
+    return jsonify({"message":"Credential enrolled successfully"})
 
 @app.route('/api/credentials/<string:credential>', methods=['DELETE'])
 def delete_credential(credential):
@@ -61,6 +64,6 @@ if __name__ == '__main__':
 
     controller.setup_gpio()
 
-    app.run(debug=True,host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0',port=5000,threaded=False)
 
 
