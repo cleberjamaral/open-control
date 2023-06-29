@@ -49,6 +49,9 @@ class credential_controller:
     def insert_credential(self, credential: str, registration_number: str, user_name: str):
         self.model.insert_credential(credential, registration_number, user_name)
 
+    def update_credential(self, credential: str, registration_number: str, user_name: str):
+        self.model.update_credential(credential, registration_number, user_name)
+
     def check_credential_exists(self,credential):
         return self.model.check_credential_exists(credential)
 

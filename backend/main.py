@@ -9,9 +9,9 @@
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-from model.credential import credential_model
-from view.credential import credential_view
-from controller.credential import credential_controller
+from view.main_view import main_view
+from model.credential_model import credential_model
+from controller.credential_controller import credential_controller
 
 app = Flask(__name__)
 CORS(app)  # Enable Cross-Origin Resource Sharing (CORS) for all routes
@@ -38,6 +38,15 @@ def enroll_credential():
     controller.insert_credential(credential,registrationNumber,userName)
     return jsonify({"message":"Credential enrolled successfully"})
 
+@app.route('/api/credentials/<string:credential>', methods=['PUT'])
+def update_credential():
+    credential = request.json['credential']
+    registrationNumber = request.json['registrationNumber']
+    userName = request.json['userName']
+    view.display_message(f"Updating credential: {credential}, Reg.Number: {registrationNumber}, User: {userName}")
+    controller.update_credential(credential,registrationNumber,userName)
+    return jsonify({"message":"Credential updated successfully"})
+
 @app.route('/api/credentials/<string:credential>', methods=['DELETE'])
 def delete_credential(credential):
     view.display_message(f"Deleting credential: {credential}")
@@ -53,8 +62,8 @@ if __name__ == '__main__':
     CREDENTIAL_TABLE = "credential"
     LOG_FILE = "open-control-backend.log"  # Specify the log file path here
 
+    view = main_view(LOG_FILE)
     model = credential_model(DATABASE_NAME, CREDENTIAL_TABLE)
-    view = credential_view(LOG_FILE)
     controller = credential_controller(model, view)
 
     view.display_message(f"Starting open-control project... database file:{DATABASE_NAME}")

@@ -1,6 +1,6 @@
 import logging
 
-class credential_view:
+class main_view:
     def __init__(self, log_file):
         self.log_file = log_file
         self.setup_logging()
