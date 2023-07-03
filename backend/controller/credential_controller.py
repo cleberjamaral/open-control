@@ -1,5 +1,5 @@
 import platform
-#import RPi.GPIO as GPIO
+import time
 
 class credential_controller:
     def __init__(self, credential_model, event_model, view):
@@ -14,30 +14,37 @@ class credential_controller:
 
         if self.is_raspberry_pi:
             self.view.display_message(f"Running on raspberry pi... Current platform: "+platform.machine())
-            #import RPi.GPIO as GPIO
-            #self.GPIO = GPIO
             
-            import controller.wiegand as wiegand             
+            import controller.wiegand as wiegand
+            import RPi.GPIO as GPIO
             import pigpio
             self.wiegand = wiegand
             self.pigpio = pigpio
+            self.GPIO = GPIO
             self.set_gate_pins()
             self.open_gate_in()
-            self.pigpio.pi().write(self.gate_in, 0)
         else:
             self.wiegand = None
             self.pigpio = None
+            self.GPIO = None
             self.view.display_message(f"Peripherals won't work since it is not a Raspberry Pi! Current platform: "+platform.machine())
 
     def set_gate_pins(self):
-        self.pigpio.pi().set_mode(self.gate_in, self.pigpio.OUTPUT)
-
+        #self.pigpio.pi().set_mode(self.gate_in, self.pigpio.OUTPUT)
+        #self.pigpio.pi().write(self.gate_in, 0)       
+        self.GPIO.setmode(self.GPIO.BCM)
+        self.GPIO.setup(self.gate_in, self.GPIO.OUT)
+ 
     def open_gate_in(self):
-        #self.pigpio.pulse(1 << self.gate_in, 0, 2000 * self.mili)
-        self.pigpio.pi().write(self.gate_in, 1)
-        import time
-        time.sleep(1)
-        self.pigpio.pi().write(self.gate_in, 0)
+        try:
+            #self.pigpio.pulse(self.gate_in, 0, 2000 * self.mili)
+            self.GPIO.output(self.gate_in, self.GPIO.HIGH)
+            #self.pigpio.pi().write(self.gate_in, 1)
+            time.sleep(3)
+            #self.pigpio.pi().write(self.gate_in, 0)
+            self.GPIO.output(self.gate_in, self.GPIO.LOW)
+        except Exception as e:
+            self.view.display_message(f"Exception! {e}!")
 
     def callback(self, bits, value):
         if bits == 34:
@@ -45,9 +52,9 @@ class credential_controller:
             credentials = self.credential_model.check_credential_exists(hex(w34)[2:])
             if credentials:
                 self.view.display_message(f"Access granted for credential {hex(w34)[2:]}!")
+                self.open_gate_in()
                 for credential in credentials:
                     self.event_model.insert_event(credential[0], credential[2], "Access granted!")
-                self.open_gate_in()
             else:
                 self.view.display_message(f"Credential {hex(w34)[2:]} not found, access denied!")
                 self.event_model.insert_event(hex(w34)[2:], "User not enrolled", "Access denied!")
