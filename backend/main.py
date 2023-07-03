@@ -28,7 +28,7 @@ def get_api():
 
 @app.route('/api/credentials', methods=['GET'])
 def get_credentials():
-    credentials = controller.get_all_credentials()
+    credentials = credential_controller_instance.get_all_credentials()
     #view.display_message(f"Credential list: {credentials}, Reg.Number: {credentials}, User: {credentials}")
     return jsonify(credentials=credentials)
 
@@ -38,7 +38,7 @@ def enroll_credential():
     registrationNumber = request.json['registrationNumber']
     userName = request.json['userName']
     view.display_message(f"Enrolling credential: {credential}, Reg.Number: {registrationNumber}, User: {userName}")
-    controller.insert_credential(credential,registrationNumber,userName)
+    credential_controller_instance.insert_credential(credential,registrationNumber,userName)
     return jsonify({"message":"Credential enrolled successfully"})
 
 @app.route('/api/credentials/<string:credential>', methods=['PUT', 'OPTIONS'])
@@ -56,18 +56,23 @@ def update_credential(credential):
     registrationNumber = request.json['registrationNumber']
     userName = request.json['userName']
     view.display_message(f"Updating credential: {credential}, Reg.Number: {registrationNumber}, User: {userName}")
-    controller.update_credential(credential, registrationNumber, userName)
+    credential_controller_instance.update_credential(credential, registrationNumber, userName)
     return jsonify({"message": "Credential updated successfully"})
 
 @app.route('/api/credentials/<string:credential>', methods=['DELETE'])
 def delete_credential(credential):
     view.display_message(f"Deleting credential: {credential}")
     
-    if controller.delete_credential(credential):
+    if credential_controller_instance.delete_credential(credential):
         return jsonify({"message":"Credential deleted successfully"})
     else:
         return jsonify({"error":"Error on deleting credential="+credential}), 500
 
+@app.route('/api/events', methods=['GET'])
+@cross_origin()
+def get_events():
+    events = event_controller_instance.get_all_events()
+    return jsonify(events=events)
 
 def connect(database_name):
     connection = sqlite3.connect(database_name, check_same_thread=False)
@@ -100,10 +105,10 @@ if __name__ == '__main__':
 
     credential_model = credential_model(CONNECTION, CREDENTIAL_TABLE)
     event_model = event_model(CONNECTION, EVENT_TABLE)
-    controller = credential_controller(credential_model, event_model, view)
+    credential_controller_instance = credential_controller(credential_model, event_model, view)
+    event_controller_instance = event_controller(event_model)
 
-
-    controller.setup_gpio()
+    credential_controller_instance.setup_gpio()
 
     app.run(debug=True,host='0.0.0.0',port=5000,threaded=False,use_reloader=False)
 

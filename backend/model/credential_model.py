@@ -17,7 +17,7 @@ class credential_model:
 
     def get_all_credentials(self):
         cursor = self.connection.cursor()
-        cursor.execute(f"SELECT credential, registration_number, user_name FROM {self.credential_table}")
+        cursor.execute(f"SELECT credential, registration_number, user_name FROM {self.credential_table} ORDER BY user_name ASC")
         credentials = cursor.fetchall()
         return [{'registration_number':credential[1],'user_name':credential[2],'credential':credential[0]} for credential in credentials]
     

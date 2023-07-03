@@ -31,7 +31,7 @@ function EventsList() {
               <th scope="col">Datetime</th>
               <th scope="col" className="text-center">Credential</th>
               <th scope="col" className="col-lg-4">User Name</th>
-              <th scope="col" className="text-center">Event Type</th>
+              <th scope="col" className="col-lg-4">Event Type</th>
             </tr>
           </thead>
           <tbody>

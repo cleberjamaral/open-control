@@ -31,10 +31,10 @@ class credential_controller:
             if credentials:
                 self.view.display_message(f"Access granted for credential {hex(w34)[2:]}!")
                 for credential in credentials:
-                    self.event_model.insert_event("date", credential[0], credential[2], "Access granted!")
+                    self.event_model.insert_event(credential[0], credential[2], "Access granted!")
             else:
                 self.view.display_message(f"Credential {hex(w34)[2:]} not found, access denied!")
-                self.event_model.insert_event("date", hex(w34)[2:], "User not enrolled", "Access denied!")
+                self.event_model.insert_event(hex(w34)[2:], "User not enrolled", "Access denied!")
 
     def setup_gpio(self):
         if self.is_raspberry_pi:
