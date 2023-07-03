@@ -10,7 +10,8 @@ function EventsList() {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('http://191.36.9.231:5000/api/events');
+      const response = await axios.get('/api/events');
+      
       setEvents(response.data.events);
     } catch (error) {
       console.error(error);
@@ -28,7 +29,7 @@ function EventsList() {
         <table className="table table-striped table-bordered">
           <thead className="table-dark" >
             <tr>
-              <th scope="col">Datetime</th>
+              <th scope="col" className="text-center">Datetime</th>
               <th scope="col" className="text-center">Credential</th>
               <th scope="col" className="col-lg-4">User Name</th>
               <th scope="col" className="col-lg-4">Event Type</th>
@@ -37,7 +38,7 @@ function EventsList() {
           <tbody>
             {events.map((event, index) => (
               <tr key={index}>
-                <td>{event.date}</td>
+                <td className="text-center">{event.date}</td>
                 <td className="text-center">{event.credential}</td>
                 <td className="col-lg-4">{event.user_name}</td>
                 <td className="col-lg-4">{event.event_type}</td>

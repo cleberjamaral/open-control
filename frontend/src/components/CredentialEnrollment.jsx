@@ -44,12 +44,12 @@ function CredentialEnrollment(props) {
       if (isEditMode) {
         // Update existing credential
         await axios.put(
-          `http://191.36.9.231:5000/api/credentials/${location.state.credential.credential}`,
+          `/api/credentials/${location.state.credential.credential}`,
           data
         );
       } else {
         // Add new credential
-        await axios.post("http://191.36.9.231:5000/api/credentials", data);
+        await axios.post('/api/credentials', data);
       }
       navigate("/");
 
