@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import CredentialEnrollment from './components/CredentialEnrollment';
-import CredentialsList from './components/CredentialsList';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import CredentialEnrollment from "./components/CredentialEnrollment";
+import CredentialsList from "./components/CredentialsList";
+import EventsList from "./components/EventsList";
 
 function App() {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -16,9 +17,9 @@ function App() {
         <button className="navbar-toggler" type="button" onClick={toggleMenu}>
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className={`collapse navbar-collapse${isMenuOpen ? ' show' : ''}`}>
+        <div className={`collapse navbar-collapse${isMenuOpen ? " show" : ""}`}>
           <ul className="navbar-nav">
-          <li className="nav-item">
+            <li className="nav-item">
               <Link to="/" className="nav-link" onClick={toggleMenu}>
                 Credentials List
               </Link>
@@ -28,13 +29,19 @@ function App() {
                 Enroll Credential
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/events" className="nav-link" onClick={toggleMenu}>
+                Events
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>
       <div className="container mt-4">
-      <Routes>
-      <Route path="/" element={<CredentialsList />}></Route>
-          <Route path="/enrollment" element={<CredentialEnrollment />} ></Route>
+        <Routes>
+          <Route path="/" element={<CredentialsList />}></Route>
+          <Route path="/enrollment" element={<CredentialEnrollment />}></Route>
+          <Route path="/events" element={<EventsList />}></Route>
         </Routes>
       </div>
     </Router>

@@ -2,8 +2,9 @@ import platform
 #import RPi.GPIO as GPIO
 
 class credential_controller:
-    def __init__(self, model, view):
-        self.model = model
+    def __init__(self, credential_model, event_model, view):
+        self.credential_model = credential_model
+        self.event_model = event_model
         self.view = view
         self.r1d0 = 17 # Wiegand D0 of reader 1
         self.r1d1 = 27 # Wiegand D1 of reader 1
@@ -26,10 +27,14 @@ class credential_controller:
     def callback(self, bits, value):
         if bits == 34:
             w34 = (value >> 1) & 0xFFFFFFFF
-            if self.model.check_credential_exists(hex(w34)[2:]):
+            credentials = self.credential_model.check_credential_exists(hex(w34)[2:])
+            if credentials:
                 self.view.display_message(f"Access granted for credential {hex(w34)[2:]}!")
+                for credential in credentials:
+                    self.event_model.insert_event("date", credential[0], credential[2], "Access granted!")
             else:
                 self.view.display_message(f"Credential {hex(w34)[2:]} not found, access denied!")
+                self.event_model.insert_event("date", hex(w34)[2:], "User not enrolled", "Access denied!")
 
     def setup_gpio(self):
         if self.is_raspberry_pi:
@@ -40,20 +45,23 @@ class credential_controller:
             self.view.display_message(f"GPIO configuration skipped!")
 
     def cleanup(self):
-        self.model.close_connection()
+        self.credential_model.close_connection()
         self.view.display_message(f"Cleanup process executed!")
 
     def get_all_credentials(self):
-        return self.model.get_all_credentials()
+        return self.credential_model.get_all_credentials()
 
     def insert_credential(self, credential: str, registration_number: str, user_name: str):
-        self.model.insert_credential(credential, registration_number, user_name)
+        self.credential_model.insert_credential(credential, registration_number, user_name)
 
     def update_credential(self, credential: str, registration_number: str, user_name: str):
-        self.model.update_credential(credential, registration_number, user_name)
+        self.credential_model.update_credential(credential, registration_number, user_name)
 
     def check_credential_exists(self,credential):
-        return self.model.check_credential_exists(credential)
+        return self.credential_model.check_credential_exists(credential)
 
     def delete_credential(self,credential):
-        return self.model.delete_credential(credential)
+        return self.credential_model.delete_credential(credential)
+
+    def insert_event(self, date: str, credential: str, user_name: str, event_type: str):
+        self.event_model.insert_event(date, credential, user_name, event_type)

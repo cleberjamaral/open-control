@@ -1,25 +1,9 @@
-import sqlite3
 
 class credential_model:
-    def __init__(self, database_name, credential_table):
-        self.database_name = database_name
+    def __init__(self, database_conection, credential_table):
+        self.connection = database_conection
         self.credential_table = credential_table
-        self.connection = None
         self.cursor = None
-
-    def connect(self):
-        self.connection = sqlite3.connect(self.database_name, check_same_thread=False)
-        self.cursor = self.connection.cursor()
-        self.create_tables()
-
-    def create_tables(self):
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.credential_table} (credential TEXT, registration_number TEXT, user_name TEXT)")
-
-    def close_connection(self):
-        if self.cursor:
-            self.cursor.close()
-        if self.connection:
-            self.connection.close()
 
     def insert_credential(self, credential: str, registration_number: str, user_name: str):
         cursor = self.connection.cursor()
